@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Custom Version Selector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Iconscout Link For Icons -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <!-- Google Font -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+      }
+      body {
+        /* Usar imagem de fundo com escurecimento */
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.imgur.com/fA06PIq.jpeg') no-repeat center center fixed;
+        background-size: cover;
+      }
+      ::selection {
+        color: #fff;
+        background: #4285f4;
+      }
+      .container {
+        text-align: center;
+        margin-top: 50px;
+      }
+      .container img {
+        width: 300px; /* Define o tamanho da imagem do título */
+        margin-bottom: 30px;
+      }
+      .wrapper {
+        width: 370px;
+        margin: 0 auto;
+      }
+      .select-btn, li, .download-btn {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .select-btn, .download-btn {
+        height: 65px;
+        padding: 0 20px;
+        font-size: 22px;
+        background: #fff;
+        border-radius: 7px;
+        justify-content: space-between;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 2px solid #5b9bf0; /* Borda azul */
+      }
+      .select-btn i, .download-btn i {
+        font-size: 31px;
+        transition: transform 0.3s linear;
+      }
+      .wrapper.active .select-btn i {
+        transform: rotate(-180deg);
+      }
+      .content {
+        display: none;
+        padding: 20px;
+        margin-top: 15px;
+        background: #fff;
+        border-radius: 7px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .wrapper.active .content {
+        display: block;
+      }
+      .content .search {
+        position: relative;
+      }
+      .search i {
+        top: 50%;
+        left: 15px;
+        color: #999;
+        font-size: 20px;
+        pointer-events: none;
+        transform: translateY(-50%);
+        position: absolute;
+      }
+      .search input {
+        height: 50px;
+        width: 100%;
+        outline: none;
+        font-size: 17px;
+        border-radius: 5px;
+        padding: 0 20px 0 43px;
+        border: 1px solid #B3B3B3;
+      }
+      .search input:focus {
+        padding-left: 42px;
+        border: 2px solid #4285f4;
+      }
+      .search input::placeholder {
+        color: #bfbfbf;
+      }
+      .content .options {
+        margin-top: 10px;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 7px;
+      }
+      .options::-webkit-scrollbar {
+        width: 7px;
+      }
+      .options::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 25px;
+      }
+      .options::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 25px;
+      }
+      .options::-webkit-scrollbar-thumb:hover {
+        background: #b3b3b3;
+      }
+      .options li {
+        height: 50px;
+        padding: 0 13px;
+        font-size: 21px;
+      }
+      .options li:hover, li.selected {
+        border-radius: 5px;
+        background: #f2f2f2;
+      }
+      .download-btn {
+        display: none;
+        margin-top: 15px;
+      }
+      .show-download {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Imagem do título -->
+      <img src="https://i.imgur.com/y6bccvR.png" alt="Título">
+      
+      <div class="wrapper">
+        <div class="select-btn">
+          <span>Select Version</span>
+          <i class="uil uil-angle-down"></i>
+        </div>
+        <div class="content">
+          <div class="search">
+            <i class="uil uil-search"></i>
+            <input spellcheck="false" type="text" placeholder="Search">
+          </div>
+          <ul class="options"></ul>
+        </div>
+        <div class="download-btn" id="download-btn">
+          <span>Download</span>
+          <i class="uil uil-arrow-down"></i>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const wrapper = document.querySelector(".wrapper"),
+      selectBtn = wrapper.querySelector(".select-btn"),
+      searchInp = wrapper.querySelector("input"),
+      options = wrapper.querySelector(".options"),
+      downloadBtn = document.querySelector("#download-btn");
+
+      let versions = [
+        { version: "1.21.40.21", link: "https://www.mediafire.com/file/w4r5nf7zmw5sgr1/Minecraft_1.21.40.21.apk/file" },
+{ version: "1.21.40.20", link: "https://www.mediafire.com/file/yaswl6ozaxhzeep/Minecraft_1.21.40.20.apk/file" },
+{ version: "1.21.30.25", link: "https://www.mediafire.com/file/ii8vq9j7rpd39ko/Minecraft_1.21.30.25.apk/file" },
+{ version: "1.21.30.24", link: "https://www.mediafire.com/file/4314aiykjsw00nl/Minecraft_1.21.30.24.apk/file" },
+{ version: "1.21.30.23", link: "https://www.mediafire.com/file/t67iqlu2g2xcikh/Minecraft_1.21.30.23.apk/file" },
+{ version: "1.21.30.22", link: "https://www.mediafire.com/file/ku04e206lg1sce3/Minecraft_1.21.30.22.apk/file" },
+{ version: "1.21.30.21", link: "https://www.mediafire.com/file/4xdkfds43hljmj6/Minecraft_1.21.30.21.apk/file" },
+{ version: "1.21.23", link: "https://www.mediafire.com/file/f240g80j0vmjxve/Minecraft_1.21.23.apk/file" },
+{ version: "1.21.22", link: "https://www.mediafire.com/file/10ndupcvsr6p2q8/Minecraft_1.21.22.apk/file" },
+{ version: "1.21.21", link: "https://www.mediafire.com/file/mzfwyq6mv6a6ih7/Minecraft_1.21.21.apk/file" },
+{ version: "1.21.20.24", link: "https://www.mediafire.com/file/nw403wbvntx5bkx/Minecraft_1.21.20.24.apk/file" },
+{ version: "1.21.30.23", link: "https://www.mediafire.com/file/wca1r3lamsulaxv/Minecraft_1.21.20.23.apk/file" },
+{ version: "1.21.30.22", link: "https://www.mediafire.com/file/egkpdnreor0zzuo/Minecraft_1.21.20.22.apk/file" },
+{ version: "1.21.30.21", link: "https://www.mediafire.com/file/zhjtsmnzm3fvytk/Minecraft_1.21.20.21.apk/file" },
+{ version: "1.21.20", link: "https://www.mediafire.com/file/tonrqoupezanp5t/Minecraft_1.21.20.apk/file" },
+{ version: "1.21.10.24", link: "https://www.mediafire.com/file/63wa0y3iglc01dz/Minecraft_1.21.10.24.apk/file" },
+{ version: "1.21.10.23", link: "https://www.mediafire.com/file/godizp785z14h3d/Minecraft_1.21.10.23.apk/file" },
+{ version: "1.21.10.22", link: "https://www.mediafire.com/file/rnwb2731461bixs/Minecraft_1.21.10.22.apk/file" },
+{ version: "1.21.10.21", link: "https://www.mediafire.com/file/amfui3dc5fo57bu/Minecraft_1.21.10.21.apk/file" },
+{ version: "1.21.10.20", link: "https://www.mediafire.com/file/y93ku8tsun2ghld/Minecraft_1.21.10.20.apk/file" },
+{ version: "1.21.2", link: "https://www.mediafire.com/file/kmkj45ax4dlz7f4/Minecraft_1.21.2.apk/file" },
+{ version: "1.21.1", link: "https://www.mediafire.com/file/4upia57bue77ghl/Minecraft_1.21.1.apk/file" },
+{ version: "1.21.0.26", link: "https://www.mediafire.com/file/4k30cb94xltc5d6/Minecraft_1.21.0.26.apk/file" },
+{ version: "1.21.0.25", link: "https://www.mediafire.com/file/exv3r0wj5eokgc8/Minecraft_1.21.0.25.apk/file" },
+{ version: "1.21.0.24", link: "https://www.mediafire.com/file/zr9d185y4zply4s/Minecraft_1.21.0.24.apk/file" },
+{ version: "1.21.0.23", link: "https://www.mediafire.com/file/mrjhvrxu9ds0m0d/Minecraft_1.21.0.23.apk/file" },
+{ version: "1.21.0.22", link: "https://www.mediafire.com/file/94kfd7y0p4vr2pg/Minecraft_1.21.0.22.apk/file" },
+{ version: "1.21.0.21", link: "https://www.mediafire.com/file/d28vr3032i33ev8/Minecraft_1.21.0.21.apk/file" },
+{ version: "1.21.0.20", link: "https://www.mediafire.com/file/hdo9euea86p10mr/Minecraft_1.21.0.20.apk/file" },
+{ version: "1.21.0", link: "https://www.mediafire.com/file/mrtka2k6gwssrbu/Minecraft_1.21.0.apk/file" },
+
+      ];
+
+      function addVersion(selectedVersion) {
+        options.innerHTML = "";
+        versions.forEach(versionObj => {
+          let isSelected = versionObj.version === selectedVersion ? "selected" : "";
+          let li = `<li onclick="updateName(this)" data-link="${versionObj.link}" class="${isSelected}">${versionObj.version}</li>`;
+          options.insertAdjacentHTML("beforeend", li);
+        });
+      }
+      addVersion();
+
+      function updateName(selectedLi) {
+        searchInp.value = "";
+        addVersion(selectedLi.innerText);
+        wrapper.classList.remove("active");
+        selectBtn.firstElementChild.innerText = selectedLi.innerText;
+        downloadBtn.classList.add("show-download"); // Mostrar o botão de download
+        downloadBtn.setAttribute("data-link", selectedLi.getAttribute("data-link")); // Adicionar link ao botão de download
+      }
+
+      searchInp.addEventListener("keyup", () => {
+        let arr = [];
+        let searchWord = searchInp.value.toLowerCase();
+        arr = versions.filter(data => {
+          return data.version.toLowerCase().startsWith(searchWord);
+        }).map(data => {
+          let isSelected = data.version === selectBtn.firstElementChild.innerText ? "selected" : "";
+          return `<li onclick="updateName(this)" data-link="${data.link}" class="${isSelected}">${data.version}</li>`;
+        }).join("");
+        options.innerHTML = arr ? arr : `<p style="margin-top: 10px;">Oops! Version not found</p>`;
+      });
+
+      selectBtn.addEventListener("click", () => wrapper.classList.toggle("active"));
+
+      // Lógica do botão de download com os links específicos
+      downloadBtn.addEventListener("click", () => {
+        const downloadLink = downloadBtn.getAttribute("data-link");
+        if (downloadLink) {
+          window.location.href = downloadLink;
+        } else {
+          alert("Nenhum link disponível para essa versão.");
+        }
+      });
+    </script>
+  </body>
+</html>
