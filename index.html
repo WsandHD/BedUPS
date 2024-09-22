@@ -2,7 +2,7 @@
 <html lang="pt-br" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>BedUPS Launcher</title>
+    <title>Custom Version Selector</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Iconscout Link For Icons -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
@@ -17,7 +17,7 @@
       }
       body {
         /* Usar imagem de fundo com escurecimento */
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://i.imgur.com/fA06PIq.jpeg') no-repeat center center fixed;
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://i.imgur.com/fA06PIq.jpeg') no-repeat center center fixed;
         background-size: cover;
       }
       ::selection {
@@ -41,16 +41,26 @@
         align-items: center;
         cursor: pointer;
       }
-      .select-btn, .download-btn {
+      .select-btn {
         height: 65px;
         padding: 0 20px;
         font-size: 22px;
-        background: #fff;
+        background: #ebebeb;
         border-radius: 7px;
         justify-content: space-between;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        border: 2px solid #5b9bf0; /* Borda azul */
+        border: 3px solid #427ad4; /* Borda azul */
       }
+      .download-btn {
+              height: 65px;
+        padding: 0 20px;
+        font-size: 22px;
+        background: #ebebeb;
+        border-radius: 7px;
+        justify-content: space-between;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        border: 3px solid #008c15; /* Borda verde */
+        }
       .select-btn i, .download-btn i {
         font-size: 31px;
         transition: transform 0.3s linear;
